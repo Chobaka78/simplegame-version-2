@@ -16,7 +16,7 @@ public class Bricks{
     static Sprite brick;
     private  SpriteBatch batch;
 
-    public Bricks(int x, int y){//go broly
+    public Bricks(int x, int y){//go broly, go broly go broly
         this.x = x;
         this.y = y;
         img = new ArrayList<Texture>();
