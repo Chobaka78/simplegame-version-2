@@ -1,32 +1,72 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.GL20;
+import java.awt.*;
+import java.util.ArrayList;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.Array;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
+public class Bricks{
+    private Texture load;
+    private ArrayList<Texture> img;
+    private static int x, y;
+    public int brick_diff;
+    public static int width, height;
+    static ArrayList<Sprite> bricks = new ArrayList<Sprite>();
+    static Sprite brick;
+    private  SpriteBatch batch;
 
-public class Bricks {
+    public Bricks(int x, int y){
+        this.x = x;
+        this.y = y;
+        img = new ArrayList<Texture>();
+            img.add(load = new Texture("bluebrick.png"));
+            img.add(load = new Texture("darkbluebrick.png"));
+            img.add(load = new Texture("greenbrick.png"));
+            img.add(load = new Texture("greybrick.png"));
+            img.add(load = new Texture("orangebrick.png"));
+            img.add(load = new Texture("pinkbrick.png"));
+            img.add(load = new Texture("redbrick.png"));
+            img.add(load = new Texture("yellowbrick.png"));
 
-    private int x, y, width, height;
-    private int grid [][];
-    public ArrayList<Sprite> bricks = new ArrayList<Sprite>();
 
-    public Bricks(int grid [] []){
+        for (int i = 0; i < img.size(); i ++){
+            brick = new Sprite(img.get(i));
+            bricks.add(brick);
+        }
+        batch = new SpriteBatch();
+    }
+
+    public void render(int x, int y, int brick_diff){
+        batch.begin();
+        for(int i = 0; i < 12; i ++) {
+            if (bricks.get(brick_diff) != null) {
+                bricks.get(brick_diff).draw(batch);
+                bricks.get(brick_diff).setPosition(35 + x*i/4, 600);
+            }
+        }
+        batch.end();
 
     }
 
-    public static void load () throws IOException{
-        Scanner kb = new Scanner(new BufferedReader(new FileReader("Map.txt")));
+    public static int getX(){
+        return x;
+    }
+
+    public static int getY(){
+        return y;
+    }
+
+    public void setAmount (int brick_diff){
+        this.brick_diff = brick_diff;
+    }
+
+    public void setX (int x){
+        this.x = x;
+    }
+
+    public void setY (int y){
+        this.y = y;
     }
 
 }

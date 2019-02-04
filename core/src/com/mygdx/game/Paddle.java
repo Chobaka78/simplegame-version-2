@@ -28,6 +28,7 @@ public class Paddle {
         player.setPosition(x,y);
         player.draw(batch);
         batch.end();
+
     }
 
 

@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.TextureArray;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -17,8 +18,10 @@ public class MyGdxGame extends ApplicationAdapter {
 	SpriteBatch batch;
 	Paddle player;
 	Ball ball;
+	Bricks bricks;
 	Texture texture;
 	public int x = 291;
+
 
 
 
@@ -29,7 +32,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		player = new Paddle(x,0);
 		ball = new Ball(player.getX() + 27, 10);
-
+		bricks = new Bricks(bricks.getX(), bricks.getX());
 
 	}
 	@Override
@@ -37,9 +40,6 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-
-
 
 		//keyboard control
 		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.getX() < 582){
@@ -60,6 +60,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		batch.end();
 		player.render(player.getX(),0);
 		ball.move(); // this will call the move method in the ball class
+		bricks.render(200,600,7);
+
+
 	}
 
 	@Override
