@@ -70,4 +70,3 @@ public class MyGdxGame extends ApplicationAdapter {
 		batch.dispose();
 		texture.dispose();
 	}
-}

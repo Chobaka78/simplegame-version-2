@@ -39,12 +39,10 @@ public class Bricks{
 
     public void render(int x, int y, int brick_diff){
         batch.begin();
-        for(int i = 0; i < 12; i ++) {
             if (bricks.get(brick_diff) != null) {
                 bricks.get(brick_diff).draw(batch);
-                bricks.get(brick_diff).setPosition(35 + x*i/4, 600);
+                bricks.get(brick_diff).setPosition(35, 600);
             }
-        }
         batch.end();
 
     }
