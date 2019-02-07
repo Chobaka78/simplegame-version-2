@@ -16,7 +16,6 @@ public class Ball {
     static Sprite ball;
     private SpriteBatch batch;
     Paddle player;
-    Bricks bricks;
     int score = 0;
     BitmapFont font;
     boolean mag = false;
@@ -87,13 +86,6 @@ public class Ball {
             if(play && ball.getBoundingRectangle().overlaps(Paddle.player.getBoundingRectangle())){
                 dy = -dy;
                 score+=10;
-            }
-            for(int i = 0; i < 12; i ++) {
-                if (play && ball.getBoundingRectangle().overlaps(Bricks.bricks.get(7).getBoundingRectangle())) {
-                    dy = -dy;
-                    dx = -dx;
-                    System.out.println("Hello");
-                }
             }
 
             if(getX() < 25){
