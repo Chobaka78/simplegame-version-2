@@ -21,6 +21,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	Bricks bricks;
 	Texture texture;
 	public int x = 291;
+	public boolean play = false;
 
 
 	@Override
@@ -57,7 +58,6 @@ public class MyGdxGame extends ApplicationAdapter {
 		player.render(player.getX(), 0);
 		ball.move(); // this will call the move method in the ball class
 
-
 	}
 
 	@Override
@@ -65,4 +65,5 @@ public class MyGdxGame extends ApplicationAdapter {
 		batch.dispose();
 		texture.dispose();
 	}
+
 }

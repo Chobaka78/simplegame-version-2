@@ -21,6 +21,7 @@ public class Ball {
     boolean mag = false;
     int speedx= 3;
     int speedy= 3;
+    Bricks bricks;
 
 
     public Ball (int x, int y){
@@ -32,6 +33,7 @@ public class Ball {
         ball = new Sprite(img);
         batch = new SpriteBatch();
         font = new BitmapFont();
+        bricks = new Bricks();
     }
 
     public void render(int x, int y){
@@ -87,12 +89,22 @@ public class Ball {
                 dy = -dy;
                 score+=10;
             }
-
             if(getX() < 25){
                 dx = -dx;
             }
             if(getX() > 642){
                 dx = -dx;
+            }
+
+            for( int k = 0; k < 14; k ++){
+                for(int i = 0; i < 8; i ++){
+                    if(play && ball.getBoundingRectangle().overlaps(Bricks.bricks.get(i).getBoundingRectangle())){
+                        dx = -dx;
+                        dy = -dy;
+                        System.out.println("Hello");
+
+                    }
+                }
             }
             if(getY() < 0){
                 if(play){

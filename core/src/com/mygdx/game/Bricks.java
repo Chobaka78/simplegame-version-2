@@ -8,58 +8,32 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Bricks{
     // 2d list with corrisponding brick location
-    private int [][] brickList= new int[][] {{4,4,4,4,4,4,4,4,4,4,4,4,4,4}, {7,7,7,7,7,7,7,7,7,7,7,7,7,7}, {8,8,8,8,8,8,8,8,8,8,8,8,8,8}, {1,1,1,1,1,1,1,1,1,1,1,1,1,1}, {6,6,6,6,6,6,6,6,6,6,6,6,6,6}, {3,3,3,3,3,3,3,3,3,3,3,3,3,3}};
+    public int [][] brickList= new int[][] {{4,4,4,4,4,4,4,4,4,4,4,4,4,4}, {7,7,7,7,7,7,7,7,7,7,7,7,7,7}, {8,8,8,8,8,8,8,8,8,8,8,8,8,8}, {1,1,1,1,1,1,1,1,1,1,1,1,1,1}, {6,6,6,6,6,6,6,6,6,6,6,6,6,6}, {3,3,3,3,3,3,3,3,3,3,3,3,3,3}};
     public static ArrayList<Point> getloc = new ArrayList<Point>(); // this list will get the sprite location
-    private SpriteBatch batch;
-
-    //creating the textures for the bricks
-    private Texture bluebrick;
-    private Texture darkbluebrick;
-    private Texture greenbrick;
-    private Texture greybrick;
-    private Texture orangebrick;
-    private Texture pinkbrick;
-    private Texture redbrick;
-    private Texture yellowbrick;
-
-    //creating the sprites for the bricks
-    private Sprite bluebrick_sprite;
-    private Sprite darkbluebrick_sprite;
-    private Sprite greenbrick_sprite;
-    private Sprite greybrick_sprite;
-    private Sprite orangebrick_sprite;
-    private Sprite pinkbrick_sprite;
-    private Sprite redbrick_sprite;
-    private Sprite yellowbrick_sprite;
-
-    private static final int GONE = 0;
-    private static final int BLUE = 1;
-    private static final int DARKBLUE = 2;
-    private static final int GREEN = 3;
-    private static final int GREY = 4;
-    private static final int ORANGE = 5;
-    private static final int PINK = 6;
-    private static final int RED = 7;
-    private static final int YELLOW = 8;
-
+    public static ArrayList<Sprite> bricks = new ArrayList<Sprite>(); // an object list that consists of all the sprites
+    public static int [] bricktype = new int[] {1,2,3,4,5,6,7,8}; // this will determine the type of brick
+    public ArrayList<Texture> load = new ArrayList<Texture>(); // an object list (texture) that will store all the textures for the sprites
 
     public Bricks(){
-        //loading all textures to sprites
-        bluebrick_sprite = new Sprite(new Texture("bluebrick.png"));
-        darkbluebrick_sprite = new Sprite(new Texture("darkbluebrick.png"));
-        greenbrick_sprite = new Sprite(new Texture("greenbrick.png"));
-        greybrick_sprite = new Sprite(new Texture("greybrick.png"));
-        orangebrick_sprite = new Sprite(new Texture("orangebrick.png"));
-        pinkbrick_sprite = new Sprite(new Texture("pinkbrick.png"));
-        redbrick_sprite = new Sprite(new Texture("redbrick.png"));
-        yellowbrick_sprite = new Sprite(new Texture("yellowbrick.png"));
+        //loading all textures to the object array list
+        load.add(new Texture("bluebrick.png"));
+        load.add(new Texture("darkbluebrick.png"));
+        load.add(new Texture("greenbrick.png"));
+        load.add(new Texture("greybrick.png"));
+        load.add(new Texture("orangebrick.png"));
+        load.add(new Texture("pinkbrick.png"));
+        load.add(new Texture("redbrick.png"));
+        load.add(new Texture("yellowbrick.png"));
+        for (int i = 0; i < 8; i++){
+            bricks.add(new Sprite(load.get(i)));// creates an object array sprite list
+        }
         getloc = get_pos();
     }
 
     public ArrayList get_pos(){
-        // beacuse all sprites are same size get the width and height of first brick
-        int width = (int) bluebrick_sprite.getWidth();
-        int height = (int) bluebrick_sprite.getHeight();
+        //Due to all the sprites being the same width and height this will take the width and height of the first sprite
+        int width = (int) bricks.get(0).getWidth();
+        int height = (int) bricks.get(0).getHeight();
         ArrayList<Point> Pos = new ArrayList<Point>(); // make a position array list that will use the 2d bricklist
         int x = 10; // starting x pos
         int y = 710; // starting y pos
@@ -75,29 +49,10 @@ public class Bricks{
 
     // renders the sprties
     private void render(SpriteBatch batch, int type){
-        if(type == BLUE){
-            bluebrick_sprite.draw(batch);
-        }
-        else if(type == DARKBLUE){
-            darkbluebrick_sprite.draw(batch);
-        }
-        else if(type == GREEN){
-            greenbrick_sprite.draw(batch);
-        }
-        else if(type == GREY){
-            greybrick_sprite.draw(batch);
-        }
-        else if(type == ORANGE){
-            orangebrick_sprite.draw(batch);
-        }
-        else if(type == PINK){
-            pinkbrick_sprite.draw(batch);
-        }
-        else if(type == RED){
-            redbrick_sprite.draw(batch);
-        }
-        else if(type == YELLOW){
-            yellowbrick_sprite.draw(batch);
+        for(int i = 0; i < 8; i ++){
+            if(type == bricktype[i]){
+                bricks.get(i).draw(batch);
+            }
         }
     }
 
@@ -110,48 +65,14 @@ public class Bricks{
                 int brickType = brickList[i][j]; // brick type is extracted from the 2d list
                 Point point = getloc.get(counter); // gets the location
                 counter += 1;
-                if (brickType == BLUE) {
-                    bluebrick_sprite.setX(point.x);
-                    bluebrick_sprite.setY(point.y);
-                    this.render(batch, brickType); // renders the brick and its type
+                for(int k = 0; k < 8; k ++){
+                    if(brickType == bricktype[k]){
+                        bricks.get(k).setPosition(point.x,point.y);
+                        this.render(batch,brickType);
+                    }
                 }
-                else if (brickType == DARKBLUE) {
-                    darkbluebrick_sprite.setX(point.x);
-                    darkbluebrick_sprite.setY(point.y);
-                    this.render(batch, brickType);
-                }
-                else if (brickType == GREEN) {
-                    greenbrick_sprite.setX(point.x);
-                    greenbrick_sprite.setY(point.y);
-                    this.render(batch, brickType);
-                }
-                else if (brickType == GREY) {
-                    greybrick_sprite.setX(point.x);
-                    greybrick_sprite.setY(point.y);
-                    this.render(batch, brickType);
-                }
-                else if (brickType == ORANGE) {
-                    orangebrick_sprite.setX(point.x);
-                    orangebrick_sprite.setY(point.y);
-                    this.render(batch, brickType);
-                }
-                else if (brickType == PINK) {
-                    pinkbrick_sprite.setX(point.x);
-                    pinkbrick_sprite.setY(point.y);
-                    this.render(batch, brickType);
-                }
-                else if (brickType == RED) {
-                    redbrick_sprite.setX(point.x);
-                    redbrick_sprite.setY(point.y);
-                    this.render(batch, brickType);
-                }
-                else if (brickType == YELLOW) {
-                    yellowbrick_sprite.setX(point.x);
-                    yellowbrick_sprite.setY(point.y);
-                    this.render(batch, brickType);
-                }
-
             }
         }
     }
+
 }
