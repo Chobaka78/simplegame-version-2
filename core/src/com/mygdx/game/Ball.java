@@ -67,7 +67,7 @@ public class Ball {
             }
         }
         if(play){
-
+            for()
             if(play && ball.getBoundingRectangle().overlaps(Paddle.player.getBoundingRectangle())){
                 dy = -dy;
                 score+=10;
