@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 
 public class MyGdxGame extends ApplicationAdapter {
@@ -19,7 +20,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	SpriteBatch batch;
 	Paddle player;
 	Ball ball;
-	Bricks bricks;
+	Bricks bricks,greenpowerup;
 	Texture texture;
 	public int x = 291;
 	private static String powerup = "";
@@ -27,6 +28,11 @@ public class MyGdxGame extends ApplicationAdapter {
 	ArrayList<Bullets> removebullet = new ArrayList<Bullets>();
 	ArrayList<ArrayList<Bricks>> bricklist = new ArrayList<ArrayList<Bricks>>();
 
+	int count = 0;
+	int pos = 0;
+	int animation = 2;
+
+	public static Texture[] greendrop = new Texture[7];
 	@Override
 	public void create() {
 		texture = new Texture(Gdx.files.internal("Arkanoid1.png"));
@@ -45,6 +51,8 @@ public class MyGdxGame extends ApplicationAdapter {
 				if(i == 4) bricks.add(new Bricks("pink",j,i));
 				if(i == 5) bricks.add(new Bricks("orange",j,i));
 				if(i == 6) bricks.add(new Bricks("green",j,i));
+
+                greendrop[i] = new Texture("greenpowerup/greenpowerup" + i + ".png");
 			}
 			bricklist.add(bricks);
 		}
@@ -70,9 +78,6 @@ public class MyGdxGame extends ApplicationAdapter {
 		else if(Gdx.input.isKeyPressed(Input.Keys.K)){
 			powerup = "expand";
 		}
-		else if(Gdx.input.isKeyPressed(Input.Keys.L)){
-			powerup = "magnet";
-		}
 		else if(Gdx.input.isKeyPressed(Input.Keys.J)){
 			powerup = "speed";
 		}
@@ -87,22 +92,16 @@ public class MyGdxGame extends ApplicationAdapter {
 			powerup = "";
 		}
 
+//		if(Bricks.greenpowerup.getBoundingRectangle().overlaps(Paddle.player.getBoundingRectangle())){
+//
+//        }
+
 		//bullets
 		if(powerup.equals("bullets") && Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
-			bullets.add(new Bullets(player.getX()));
-			bullets.add(new Bullets(player.getX() + player.getWidth()));
+			bullets.add(new Bullets(player.getX() + 2));
+			bullets.add(new Bullets(player.getX() + player.getWidth() - 2));
 
 		}
-
-		//update
-//		for(Bullets bullet : bullets){
-//			bullet.update(batch);
-//			if(bullet.remove){
-//				removebullet.add(bullet);
-//			}
-//		}
-//		bullets.removeAll(removebullet);
-
 		player.setX(x); // set the paddle to centre
 		batch.begin();
 
@@ -112,14 +111,34 @@ public class MyGdxGame extends ApplicationAdapter {
 			for(int j = 0; j < bricklist.get(i).size(); j ++){
 				if(bricklist.get(i).get(j).collide(ball)){
 					ball.dy = -2;
-					bricklist.get(i).get(j).brickremove();
+					bricklist.get(i).get(j).setGone(true);
+				}
+				for(int n = 0; n < bullets.size(); n ++){
+					if(bricklist.get(i).get(j).bulletcollide(bullets.get(n))){
+						bullets.remove(n);
+						bricklist.get(i).get(j).setGone(true);
+					}
 				}
 				bricklist.get(i).get(j).update(batch);
 			}
 		}
-		for(Bullets bullet : bullets){
-			bullet.render(batch);
+		//update
+		for(int i = 0; i < bullets.size(); i ++){
+			bullets.get(i).render(batch);
+			bullets.get(i).update(batch);
+			if(bullets.get(i).y > Gdx.graphics.getHeight()){
+				bullets.remove(i);
+			}
 		}
+
+        count += 1;
+        if (count > animation) {
+            count = 0;
+            pos += 1;
+            if (pos >= 3) {
+                pos = 0;
+            }
+        }
 
 		batch.end();
 		ball.move(); // this will call the move method in the ball class

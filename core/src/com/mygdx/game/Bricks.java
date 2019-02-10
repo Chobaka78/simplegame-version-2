@@ -17,8 +17,17 @@ public class Bricks{
     private Texture pinkBrick;
     private Texture orangeBrick;
     private Texture yellowBrick;
-    private Rectangle rect;
+    public Rectangle rect;
+    public boolean gone = false;
+    int speed = 2;
+    int count = 0;
+    int pos = 0;
+    int animation = 2;
+    int vy;
+    public static Sprite greenpowerup;
+    private int hitx, hity;
 
+    private boolean isdone = false;
 
 
 
@@ -63,25 +72,57 @@ public class Bricks{
     private void render(SpriteBatch batch){
         rect = new Rectangle((int) brick.getX(), (int) brick.getY(), (int) brick.getWidth(), (int) brick.getHeight());
         brick.draw(batch);
+        if(this.getGone() && !isdone){
+            if(pos == 7) isdone = true;
+            greenpowerup = new Sprite(MyGdxGame.greendrop[pos]);
+            greenpowerup.setX(hitx);
+            vy -= speed;
+            greenpowerup.setY(vy);
+            greenpowerup.draw(batch);
+
+        }
 
     }
 
     // updates the sprites to make the multiple bricks
     public void update(SpriteBatch batch){
+        if(this.getGone()){
+            brick.setAlpha(0);
+            count += 1;
+            if (count > animation) {
+                count = 0;
+                pos += 1;
+                if (pos >= 7) {
+                    pos = 0;
+                }
+            }
+
+        }
         this.render(batch);
     }
 
+    public Rectangle getRect(){
+        return rect;
+    }
+
     public boolean collide (Ball ball){
-        return Ball.ball.getBoundingRectangle().overlaps(brick.getBoundingRectangle());
+        return Ball.ball.getBoundingRectangle().overlaps(brick.getBoundingRectangle()) && !this.getGone();
     }
 
-    public void brickremove(){
-        brick.setAlpha(0);
-        brick.setPosition(1000,1000);
+
+    public boolean bulletcollide(Bullets bullet){
+        return bullet.getRect().intersects(this.getRect()) && !this.getGone();
     }
 
-    public boolean bulletcollide(Bullets bullets){
-        return Bullets.bullet.getBoundingRectangle().overlaps(brick.getBoundingRectangle());
+    public boolean getGone(){
+        return gone;
+    }
+
+    public void setGone(boolean gone){
+        this.gone = gone;
+        hitx = getRect().x;
+        hity = getRect().y;
+        vy = hity;
     }
 
 
