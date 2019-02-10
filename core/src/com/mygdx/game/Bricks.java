@@ -27,6 +27,8 @@ public class Bricks{
     public static Sprite greenpowerup;
     private int hitx, hity;
 
+    public static boolean powergone = false;
+
     private boolean isdone = false;
 
 
@@ -78,8 +80,9 @@ public class Bricks{
             greenpowerup.setX(hitx);
             vy -= speed;
             greenpowerup.setY(vy);
-            greenpowerup.draw(batch);
-
+            if(powergone == false) {
+                greenpowerup.draw(batch);
+            }
         }
 
     }
@@ -124,6 +127,7 @@ public class Bricks{
         hity = getRect().y;
         vy = hity;
     }
+
 
 
 }

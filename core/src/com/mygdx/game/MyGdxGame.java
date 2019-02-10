@@ -20,7 +20,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	SpriteBatch batch;
 	Paddle player;
 	Ball ball;
-	Bricks bricks,greenpowerup;
+	Bricks bricks;
 	Texture texture;
 	public int x = 291;
 	private static String powerup = "";
@@ -92,9 +92,9 @@ public class MyGdxGame extends ApplicationAdapter {
 			powerup = "";
 		}
 
-//		if(Bricks.greenpowerup.getBoundingRectangle().overlaps(Paddle.player.getBoundingRectangle())){
-//
-//        }
+		if(Bricks.greenpowerup.getBoundingRectangle().overlaps(Paddle.player.getBoundingRectangle())){
+		    Bricks.powergone = true;
+        }
 
 		//bullets
 		if(powerup.equals("bullets") && Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
