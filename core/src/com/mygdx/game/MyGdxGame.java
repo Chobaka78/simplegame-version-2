@@ -25,15 +25,29 @@ public class MyGdxGame extends ApplicationAdapter {
 	private static String powerup = "";
 	ArrayList<Bullets> bullets;
 	ArrayList<Bullets> removebullet = new ArrayList<Bullets>();
+	ArrayList<ArrayList<Bricks>> bricklist = new ArrayList<ArrayList<Bricks>>();
 
 	@Override
 	public void create() {
 		texture = new Texture(Gdx.files.internal("Arkanoid1.png"));
 		batch = new SpriteBatch();
 		player = new Paddle(291,0);
-		ball = new Ball(291, 10);
-		bricks = new Bricks();
+		ball = new Ball(291, 10,ball.getDx(),ball.getDy());
 		bullets = new ArrayList<Bullets>();
+
+		for(int i = 0; i < 7; i ++){
+			ArrayList<Bricks> bricks = new ArrayList<Bricks>();
+			for(int j = 0; j < 14; j ++){
+				if(i == 0) bricks.add(new Bricks("grey", j,i));
+				if(i == 1) bricks.add(new Bricks("red",j,i));
+				if(i == 2) bricks.add(new Bricks("yellow",j,i));
+				if(i == 3) bricks.add(new Bricks("blue",j,i));
+				if(i == 4) bricks.add(new Bricks("pink",j,i));
+				if(i == 5) bricks.add(new Bricks("orange",j,i));
+				if(i == 6) bricks.add(new Bricks("green",j,i));
+			}
+			bricklist.add(bricks);
+		}
 
 	}
 
@@ -79,21 +93,30 @@ public class MyGdxGame extends ApplicationAdapter {
 			bullets.add(new Bullets(player.getX() + player.getWidth()));
 
 		}
+
 		//update
-		for(Bullets bullet : bullets){
-			bullet.update(batch);
-			if(bullet.remove){
-				removebullet.add(bullet);
-			}
-		}
-		bullets.removeAll(removebullet);
+//		for(Bullets bullet : bullets){
+//			bullet.update(batch);
+//			if(bullet.remove){
+//				removebullet.add(bullet);
+//			}
+//		}
+//		bullets.removeAll(removebullet);
 
 		player.setX(x); // set the paddle to centre
 		batch.begin();
 
 		batch.draw(texture, 0, 0, 672, 768);
 		player.update(batch,x,player.getY(),powerup);
-		bricks.update(batch);
+		for(int i = 0; i < bricklist.size(); i ++){
+			for(int j = 0; j < bricklist.get(i).size(); j ++){
+				if(bricklist.get(i).get(j).collide(ball)){
+					ball.dy = -2;
+					bricklist.get(i).get(j).brickremove();
+				}
+				bricklist.get(i).get(j).update(batch);
+			}
+		}
 		for(Bullets bullet : bullets){
 			bullet.render(batch);
 		}

@@ -8,15 +8,19 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import java.awt.*;
+
 
 public class Ball {
-    private static int x, y, dx = -1, dy = 2;
+    private static int x, y;
+    public static int dx = -1, dy = 2;
     public boolean play = false;
     private Texture img;
     static Sprite ball;
     private SpriteBatch batch;
     Paddle player;
     int score = 0;
+    public static Rectangle rect;
     BitmapFont font;
     boolean mag = false;
     public static int speedx= 3;
@@ -24,7 +28,7 @@ public class Ball {
     Bricks bricks;
 
 
-    public Ball (int x, int y){
+    public Ball (int x, int y,int dx, int dy){
         this.x = x;
         this.y = y;
         this.dx = dx;
@@ -36,7 +40,7 @@ public class Ball {
         ball = new Sprite(img);
         batch = new SpriteBatch();
         font = new BitmapFont();
-        bricks = new Bricks();
+        rect = new Rectangle(x,y,9,9);
     }
 
     public void render(int x, int y){
@@ -47,13 +51,6 @@ public class Ball {
         batch.end();
     }
 
-    public static int getX(){
-        return x;
-    }
-
-    public static int getY(){
-        return y;
-    }
 
     public void move() { // this method will move the ball and also render it on to the screen
 
@@ -63,10 +60,12 @@ public class Ball {
             y = player.getY() + player.height;
             dx = -1; dy = 2;
             if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-            play = true;
+                play = true;
+
             }
         }
         if(play){
+
             if(play && ball.getBoundingRectangle().overlaps(Paddle.player.getBoundingRectangle())){
                 dy = -dy;
                 score+=10;
@@ -89,6 +88,30 @@ public class Ball {
             x += dx*speedx;
             y += dy*speedy;
             render(x, y);
+
+
         }
+
+    }
+
+    public static int getX(){
+        return x;
+    }
+
+    public static int getY(){
+        return y;
+    }
+
+    public static int getDx(){
+        return dx;
+
+    }
+
+    public static int getDy(){
+        return dy;
+    }
+
+    public static Rectangle getRect(){
+        return rect;
     }
 }

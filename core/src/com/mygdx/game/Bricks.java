@@ -8,71 +8,81 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Bricks{
     // 2d list with corrisponding brick location
-    public int [][] brickList= new int[][] {{4,4,4,4,4,4,4,4,4,4,4,4,4,4}, {7,7,7,7,7,7,7,7,7,7,7,7,7,7}, {8,8,8,8,8,8,8,8,8,8,8,8,8,8}, {1,1,1,1,1,1,1,1,1,1,1,1,1,1}, {6,6,6,6,6,6,6,6,6,6,6,6,6,6}, {3,3,3,3,3,3,3,3,3,3,3,3,3,3}};
-    public static ArrayList<Point> getloc = new ArrayList<Point>(); // this list will get the sprite location
-    public static ArrayList<Sprite> bricks = new ArrayList<Sprite>(); // an object list that consists of all the sprites
-    public static int [] bricktype = new int[] {1,2,3,4,5,6,7,8}; // this will determine the type of brick
-    public ArrayList<Texture> load = new ArrayList<Texture>(); // an object list (texture) that will store all the textures for the sprites
+    private static int x,y, width, height;
+    private Sprite brick;
+    private Texture blueBrick;
+    private Texture greenBrick;
+    private Texture greyBrick;
+    private Texture redBrick;
+    private Texture pinkBrick;
+    private Texture orangeBrick;
+    private Texture yellowBrick;
+    private Rectangle rect;
 
-    public Bricks(){
+
+
+
+    public Bricks(String type, int x, int y){
         //loading all textures to the object array list
-        load.add(new Texture("bluebrick.png"));
-        load.add(new Texture("darkbluebrick.png"));
-        load.add(new Texture("greenbrick.png"));
-        load.add(new Texture("greybrick.png"));
-        load.add(new Texture("orangebrick.png"));
-        load.add(new Texture("pinkbrick.png"));
-        load.add(new Texture("redbrick.png"));
-        load.add(new Texture("yellowbrick.png"));
-        for (int i = 0; i < 8; i++){
-            bricks.add(new Sprite(load.get(i)));// creates an object array sprite list
+        blueBrick = new Texture("Bricks/bluebrick.png");
+        greenBrick = new Texture("Bricks/greenbrick.png");
+        greyBrick = new Texture("Bricks/greybrick.png");
+        redBrick = new Texture("Bricks/redbrick.png");
+        pinkBrick = new Texture("Bricks/pinkbrick.png");
+        orangeBrick = new Texture("Bricks/orangebrick.png");
+        yellowBrick = new Texture("Bricks/yellowbrick.png");
+
+        if(type.equals("blue")){
+            brick = new Sprite(blueBrick);
         }
-        getloc = get_pos();
+        else if (type.equals("green")){
+            brick = new Sprite(greenBrick);
+        }
+        else if (type.equals("grey")){
+            brick = new Sprite(greyBrick);
+        }
+        else if (type.equals("red")){
+            brick = new Sprite(redBrick);
+        }
+        else if (type.equals("pink")){
+            brick = new Sprite(pinkBrick);
+        }
+        else if (type.equals("orange")){
+            brick = new Sprite(orangeBrick);
+        }
+        else if (type.equals("yellow")){
+            brick = new Sprite(yellowBrick);
+        }
+        brick.setPosition((40 + x * 42)  , 705 - y * 20);
+        rect = new Rectangle((int) brick.getX(), (int) brick.getY(), (int) brick.getWidth(), (int) brick.getHeight());
+
     }
 
-    public ArrayList get_pos(){
-        //Due to all the sprites being the same width and height this will take the width and height of the first sprite
-        int width = (int) bricks.get(0).getWidth();
-        int height = (int) bricks.get(0).getHeight();
-        ArrayList<Point> Pos = new ArrayList<Point>(); // make a position array list that will use the 2d bricklist
-        int x = 10; // starting x pos
-        int y = 710; // starting y pos
-        // makes all the brick locations according to the 2d list
-        for (int i = 1; i < 7; i++) {
-            for (int j = 1; j < 14; j++) {
-                Point position = new Point((x + j * (width + 2)), (y - i * (height + 2)));
-                Pos.add(position);
-            }
-        }
-        return Pos; // returns the list
-    }
 
     // renders the sprties
-    private void render(SpriteBatch batch, int type){
-        for(int i = 0; i < 8; i ++){
-            if(type == bricktype[i]){
-                bricks.get(i).draw(batch);
-            }
-        }
+    private void render(SpriteBatch batch){
+        rect = new Rectangle((int) brick.getX(), (int) brick.getY(), (int) brick.getWidth(), (int) brick.getHeight());
+        brick.draw(batch);
+
     }
 
     // updates the sprites to make the multiple bricks
     public void update(SpriteBatch batch){
-        int counter = 0;
-        // makes the bricks
-        for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 13; j++) {
-                int brickType = brickList[i][j]; // brick type is extracted from the 2d list
-                Point point = getloc.get(counter); // gets the location
-                counter += 1;
-                for(int k = 0; k < 8; k ++){
-                    if(brickType == bricktype[k]){
-                        bricks.get(k).setPosition(point.x,point.y);
-                        this.render(batch,brickType);
-                    }
-                }
-            }
-        }
+        this.render(batch);
     }
+
+    public boolean collide (Ball ball){
+        return Ball.ball.getBoundingRectangle().overlaps(brick.getBoundingRectangle());
+    }
+
+    public void brickremove(){
+        brick.setAlpha(0);
+        brick.setPosition(1000,1000);
+    }
+
+    public boolean bulletcollide(Bullets bullets){
+        return Bullets.bullet.getBoundingRectangle().overlaps(brick.getBoundingRectangle());
+    }
+
 
 }

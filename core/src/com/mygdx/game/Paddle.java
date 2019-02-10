@@ -11,7 +11,7 @@ public class Paddle {
     private static int x, y;
     public static int width, height;
     public static String powerup;
-    private Texture img, img1;
+    private Texture img;
     private static boolean mag = false;
     static Sprite player;
     Ball ball;
@@ -90,4 +90,3 @@ public class Paddle {
     }
 
 }
-//hello hhhhhhh
