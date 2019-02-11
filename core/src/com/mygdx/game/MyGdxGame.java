@@ -23,9 +23,9 @@ public class MyGdxGame extends ApplicationAdapter {
 	Bricks bricks;
 	Texture texture;
 	public int x = 291;
-	private static String powerup = "";
+	public static String [] powerups = new String[]{"magnet", "slow", "speed", "expand", "player","laser"};
+	public static String powerup = "";
 	ArrayList<Bullets> bullets;
-	ArrayList<Bullets> removebullet = new ArrayList<Bullets>();
 	ArrayList<ArrayList<Bricks>> bricklist = new ArrayList<ArrayList<Bricks>>();
 
 	int count = 0;
@@ -33,6 +33,11 @@ public class MyGdxGame extends ApplicationAdapter {
 	int animation = 2;
 
 	public static Texture[] greendrop = new Texture[7];
+    public static Texture[] reddrop = new Texture[7];
+    public static Texture[] greydrop = new Texture[7];
+    public static Texture[] orangedrop = new Texture[7];
+    public static Texture[] pinkdrop = new Texture[7];
+    public static Texture[] bluedrop = new Texture[7];
 	@Override
 	public void create() {
 		texture = new Texture(Gdx.files.internal("Arkanoid1.png"));
@@ -53,6 +58,11 @@ public class MyGdxGame extends ApplicationAdapter {
 				if(i == 6) bricks.add(new Bricks("green",j,i));
 
                 greendrop[i] = new Texture("greenpowerup/greenpowerup" + i + ".png");
+                orangedrop[i] = new Texture("orangepowerup/orangepowerup" + i + ".png");
+                pinkdrop[i] = new Texture("pinkpowerup/purplepowerup" + i + ".png");
+                bluedrop[i] = new Texture("bluepowerup/bluepowerup" + i + ".png");
+                greydrop[i] = new Texture("greypowerup/greypowerup" + i + ".png");
+                reddrop[i] = new Texture("redpowerup/redpowerup" + i + ".png");
 			}
 			bricklist.add(bricks);
 		}
@@ -76,25 +86,21 @@ public class MyGdxGame extends ApplicationAdapter {
 			x -= 5;
 		}
 		else if(Gdx.input.isKeyPressed(Input.Keys.K)){
-			powerup = "expand";
+			powerup = powerups[3];
 		}
 		else if(Gdx.input.isKeyPressed(Input.Keys.J)){
-			powerup = "speed";
+			powerup = powerups[2];
 		}
 		else if(Gdx.input.isKeyPressed(Input.Keys.H)){
-			powerup = "slow";
+			powerup = powerups[1];
 		}
 		else if(Gdx.input.isKeyPressed(Input.Keys.G)){
-			powerup = "bullets";
+			powerup = powerups[5];
 
 		}
 		else if(Gdx.input.isKeyPressed(Input.Keys.F)){
 			powerup = "";
 		}
-
-		if(Bricks.greenpowerup.getBoundingRectangle().overlaps(Paddle.player.getBoundingRectangle())){
-		    Bricks.powergone = true;
-        }
 
 		//bullets
 		if(powerup.equals("bullets") && Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){

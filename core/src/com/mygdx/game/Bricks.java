@@ -2,6 +2,8 @@ package com.mygdx.game;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Random;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -19,18 +21,20 @@ public class Bricks{
     private Texture yellowBrick;
     public Rectangle rect;
     public boolean gone = false;
-    int speed = 2;
+    int speed = 5;
     int count = 0;
     int pos = 0;
     int animation = 2;
     int vy;
-    public static Sprite greenpowerup;
     private int hitx, hity;
+
+    Random rand = new Random();
 
     public static boolean powergone = false;
 
     private boolean isdone = false;
 
+    public static ArrayList<Sprite> powerups = new ArrayList<Sprite>();
 
 
     public Bricks(String type, int x, int y){
@@ -74,16 +78,25 @@ public class Bricks{
     private void render(SpriteBatch batch){
         rect = new Rectangle((int) brick.getX(), (int) brick.getY(), (int) brick.getWidth(), (int) brick.getHeight());
         brick.draw(batch);
-        if(this.getGone() && !isdone){
-            if(pos == 7) isdone = true;
-            greenpowerup = new Sprite(MyGdxGame.greendrop[pos]);
-            greenpowerup.setX(hitx);
+        if(this.getGone() && !isdone) {
+            if (pos == 7) isdone = true;
             vy -= speed;
-            greenpowerup.setY(vy);
-            if(powergone == false) {
-                greenpowerup.draw(batch);
-            }
+            powerups.add(new Sprite(MyGdxGame.greendrop[pos]));
+            powerups.add(new Sprite(MyGdxGame.orangedrop[pos]));
+            powerups.add(new Sprite(MyGdxGame.pinkdrop[pos]));
+            powerups.add(new Sprite(MyGdxGame.bluedrop[pos]));
+            powerups.add(new Sprite(MyGdxGame.greydrop[pos]));
+            powerups.add(new Sprite(MyGdxGame.reddrop[pos]));
+            int r = rand.nextInt(5);
+            powerups.get(r).setX(hitx);
+            powerups.get(r).setY(vy);
+            powerups.get(r).draw(batch);
+
         }
+
+    }
+
+    private void renderPowerup(SpriteBatch batch){
 
     }
 
@@ -100,6 +113,16 @@ public class Bricks{
                 }
             }
 
+            for(int i = 0; i < powerups.size(); i ++){
+                if (Paddle.player.getBoundingRectangle().overlaps(powerups.get(i).getBoundingRectangle())){
+                    System.out.println(powerups.size());
+                    powerups.remove(i);
+                    System.out.println(powerups.size());
+                    MyGdxGame.powerup = "magnet";
+
+                }
+            }
+
         }
         this.render(batch);
     }
@@ -111,6 +134,7 @@ public class Bricks{
     public boolean collide (Ball ball){
         return Ball.ball.getBoundingRectangle().overlaps(brick.getBoundingRectangle()) && !this.getGone();
     }
+
 
 
     public boolean bulletcollide(Bullets bullet){
