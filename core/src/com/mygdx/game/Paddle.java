@@ -26,50 +26,54 @@ public class Paddle {
     }
 
     public void render(SpriteBatch batch){
-       player.draw(batch);
+        player.draw(batch);
 
     }
     public void update(SpriteBatch batch, int x, int y, String powerup){
 
         if(powerup.equals("")){
-           player.setSize(64,12);
-           player.setPosition(x,y);
-           render(batch);
-       }
-
-       else if(powerup.equals("expand")){
-           player.setSize(100,12);
-           player.setPosition(x,y);
-           render(batch);
-       }
-
-       else if(powerup.equals("magnet")){
-           mag = true;
-           if(mag && Ball.ball.getBoundingRectangle().overlaps(player.getBoundingRectangle())){
-               Ball.ball.setPosition(player.getX() + player.getWidth()/2 - 2,player.getY() + height);
-           }
-           player.setPosition(x,y);
-           render(batch);
+            player.setSize(64,12);
+            ball.speedy = 3;
+            ball.speedx = 3;
+            mag = false;
+            player.setPosition(x,y);
+            render(batch);
         }
 
-       else if(powerup.equals("speed")){
+        else if(powerup.equals("expand")){
+            player.setSize(100,12);
+            player.setPosition(x,y);
+            render(batch);
+        }
+
+        else if(powerup.equals("magnet")){
+            mag = true;
+            if(mag && Ball.ball.getBoundingRectangle().overlaps(player.getBoundingRectangle())){
+                Ball.ball.setPosition(player.getX() + player.getWidth()/2 - 2,player.getY() + height);
+            }
+            player.setPosition(x,y);
+            render(batch);
+        }
+
+        else if(powerup.equals("speed")){
             ball.speedx = 10;
             ball.speedy = 10;
             player.setPosition(x,y);
             render(batch);
         }
 
-       else if(powerup.equals("slow")){
-           ball.speedx = 1;
-           ball.speedy = 1;
-           player.setPosition(x,y);
-           render(batch);
-        }
-
-       else if(powerup.equals("bullets")){
+        else if(powerup.equals("slow")){
+            ball.speedx = 2;
+            ball.speedy = 2;
             player.setPosition(x,y);
             render(batch);
         }
+
+        else if(powerup.equals("bullets")){
+            player.setPosition(x,y);
+            render(batch);
+        }
+
     }
 
 

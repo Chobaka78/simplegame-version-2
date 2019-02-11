@@ -13,7 +13,7 @@ import java.awt.*;
 
 public class Ball {
     private static int x, y;
-    public static int dx = -1, dy = 2;
+    public static int dx = 10, dy = 2;
     public boolean play = false;
     private Texture img;
     static Sprite ball;
@@ -21,7 +21,6 @@ public class Ball {
     Paddle player;
     int score = 0;
     public static Rectangle rect;
-    BitmapFont font;
     boolean mag = false;
     public static int speedx= 3;
     public static int speedy= 3;
@@ -39,7 +38,6 @@ public class Ball {
         img = new Texture(Gdx.files.internal("ball.png"));
         ball = new Sprite(img);
         batch = new SpriteBatch();
-        font = new BitmapFont();
         rect = new Rectangle(x,y,9,9);
     }
 
@@ -47,28 +45,30 @@ public class Ball {
         batch.begin();
         ball.setPosition(x,y);
         ball.draw(batch);
-        font.draw(batch, "score = "+ score, 300, 740);
+
         batch.end();
     }
 
 
-    public void move() { // this method will move the ball and also render it on to the screen
+    public void move() {
+        // this method will move the ball and also render it on to the screen
 
         if(!play){
             render(player.getX() + player.getWidth()/2 -2,player.getY() + player.height);
             x = player.getX() + player.getWidth()/2 - 2;
             y = player.getY() + player.height;
-            dx = -1; dy = 2;
+            dx = 1; dy = 2;
             if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
                 play = true;
+
 
             }
         }
         if(play){
 
+
             if(play && ball.getBoundingRectangle().overlaps(Paddle.player.getBoundingRectangle())){
                 dy = -dy;
-                score+=10;
             }
             if(getX() < 25){
                 dx = -dx;
@@ -79,6 +79,7 @@ public class Ball {
             if(getY() < 0){
                 if(play){
                     play = false;
+                    MyGdxGame.powerup = "";
                 }
            }
 
@@ -91,6 +92,7 @@ public class Ball {
 
 
         }
+
 
     }
 

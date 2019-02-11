@@ -20,29 +20,32 @@ public class MyGdxGame extends ApplicationAdapter {
 	SpriteBatch batch;
 	Paddle player;
 	Ball ball;
-	Bricks bricks;
+	Powerups power;
 	Texture texture;
+	Texture menu;
 	public int x = 291;
+	int score =0 ;
 	public static String [] powerups = new String[]{"magnet", "slow", "speed", "expand", "player","laser"};
 	public static String powerup = "";
 	ArrayList<Bullets> bullets;
-	ArrayList<ArrayList<Bricks>> bricklist = new ArrayList<ArrayList<Bricks>>();
+	public static ArrayList<ArrayList<Bricks>> bricklist = new ArrayList<ArrayList<Bricks>>();
+	ArrayList<Powerups>POWERUPS = new ArrayList<Powerups>();
+	Random rand = new Random();
+	public boolean hit = false;
+	public static int deadx, deady;
 
-	int count = 0;
-	int pos = 0;
-	int animation = 2;
+	BitmapFont font;
+	boolean game = false ;
 
-	public static Texture[] greendrop = new Texture[7];
-    public static Texture[] reddrop = new Texture[7];
-    public static Texture[] greydrop = new Texture[7];
-    public static Texture[] orangedrop = new Texture[7];
-    public static Texture[] pinkdrop = new Texture[7];
-    public static Texture[] bluedrop = new Texture[7];
+
 	@Override
 	public void create() {
+		font = new BitmapFont();
+		menu = new Texture(Gdx.files.internal("menu.png"));
 		texture = new Texture(Gdx.files.internal("Arkanoid1.png"));
 		batch = new SpriteBatch();
 		player = new Paddle(291,0);
+		power = new Powerups();
 		ball = new Ball(291, 10,ball.getDx(),ball.getDy());
 		bullets = new ArrayList<Bullets>();
 
@@ -57,24 +60,17 @@ public class MyGdxGame extends ApplicationAdapter {
 				if(i == 5) bricks.add(new Bricks("orange",j,i));
 				if(i == 6) bricks.add(new Bricks("green",j,i));
 
-                greendrop[i] = new Texture("greenpowerup/greenpowerup" + i + ".png");
-                orangedrop[i] = new Texture("orangepowerup/orangepowerup" + i + ".png");
-                pinkdrop[i] = new Texture("pinkpowerup/purplepowerup" + i + ".png");
-                bluedrop[i] = new Texture("bluepowerup/bluepowerup" + i + ".png");
-                greydrop[i] = new Texture("greypowerup/greypowerup" + i + ".png");
-                reddrop[i] = new Texture("redpowerup/redpowerup" + i + ".png");
 			}
 			bricklist.add(bricks);
 		}
-
 	}
 
 	@Override
 	public void render() {
-
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		System.out.println(powerup);
 		//keyboard control
 		// shooting code
 
@@ -85,22 +81,6 @@ public class MyGdxGame extends ApplicationAdapter {
 		else if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.getX() > 25) {
 			x -= 5;
 		}
-		else if(Gdx.input.isKeyPressed(Input.Keys.K)){
-			powerup = powerups[3];
-		}
-		else if(Gdx.input.isKeyPressed(Input.Keys.J)){
-			powerup = powerups[2];
-		}
-		else if(Gdx.input.isKeyPressed(Input.Keys.H)){
-			powerup = powerups[1];
-		}
-		else if(Gdx.input.isKeyPressed(Input.Keys.G)){
-			powerup = powerups[5];
-
-		}
-		else if(Gdx.input.isKeyPressed(Input.Keys.F)){
-			powerup = "";
-		}
 
 		//bullets
 		if(powerup.equals("bullets") && Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
@@ -110,18 +90,52 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 		player.setX(x); // set the paddle to centre
 		batch.begin();
+		batch.draw(menu, 0,0,672,768);
+		      if(Gdx.input.isKeyPressed(Input.Keys.ENTER)){
+		      	game = true;
 
-		batch.draw(texture, 0, 0, 672, 768);
+			  }
+		if (game = true ) {
+			batch.draw(texture, 0, 0, 672, 768);
+			font.draw(batch, "score = "+ score, 300, 740);
+
+		}
+		int drop = rand.nextInt(1000);
+		if(drop < 350 && hit && POWERUPS.size() == 0) {
+			POWERUPS.add(new Powerups());
+		}
+		else{
+			hit = false;
+		}
+		for(int m = 0; m < POWERUPS.size(); m ++){
+			POWERUPS.get(m).update(batch);
+			if(POWERUPS.get(m).collide(player)){
+				powerup = powerups[power.getType()];
+				POWERUPS.remove(m);
+				hit = false;
+			}
+			else if(POWERUPS.get(m).getRect().y + POWERUPS.get(m).getRect().height < 0){
+				POWERUPS.remove(m);
+				hit = false;
+			}
+		}
+
 		player.update(batch,x,player.getY(),powerup);
 		for(int i = 0; i < bricklist.size(); i ++){
 			for(int j = 0; j < bricklist.get(i).size(); j ++){
 				if(bricklist.get(i).get(j).collide(ball)){
 					ball.dy = -2;
+					score +=100;
+					hit = true;
+					deadx = bricklist.get(i).get(j).rect.x;
+					deady = bricklist.get(i).get(j).rect.y;
 					bricklist.get(i).get(j).setGone(true);
 				}
 				for(int n = 0; n < bullets.size(); n ++){
 					if(bricklist.get(i).get(j).bulletcollide(bullets.get(n))){
 						bullets.remove(n);
+						score +=100;
+						hit = true;
 						bricklist.get(i).get(j).setGone(true);
 					}
 				}
@@ -137,14 +151,6 @@ public class MyGdxGame extends ApplicationAdapter {
 			}
 		}
 
-        count += 1;
-        if (count > animation) {
-            count = 0;
-            pos += 1;
-            if (pos >= 3) {
-                pos = 0;
-            }
-        }
 
 		batch.end();
 		ball.move(); // this will call the move method in the ball class
