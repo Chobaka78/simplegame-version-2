@@ -1,3 +1,8 @@
+/*
+DesktopLauncher.java
+Usman Farooqi & Ghanem Ghanem
+launcher class for the Arkanoid game
+ */
 package com.mygdx.game.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
@@ -9,8 +14,8 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		new LwjglApplication(new MyGdxGame(), config);
-		config.width = 672;
-		config.height = 768;
+		config.width = 672; // sets the width of screen
+		config.height = 768; // set height of screen
 		config.title = "Arkanoid";
 
 	}

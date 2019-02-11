@@ -1,37 +1,26 @@
-package com.mygdx.game;
+/*
+Brick.java
+Usman Farooqi & Ghanem Ghanem
+Brick class for the Arkanoid game
+ */
 
+package com.mygdx.game;
+//importing modules
 import java.awt.*;
 import java.util.Random;
-
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import static com.mygdx.game.Powerups.power;
-
+//this class controls all the methods and functions needed for bricks
 public class Bricks{
-    // 2d list with corrisponding brick location
-    public static int x,y;
-    private Sprite brick;
-    private Texture blueBrick, greenBrick, greyBrick, redBrick, pinkBrick, orangeBrick, yellowBrick;
-    public Rectangle rect;
-    public boolean gone = false;
-    int speed = 2;
-    Powerups power;
+    // making public and private variables
+    private Sprite brick; // bricks as a sprite
+    private Texture blueBrick, greenBrick, greyBrick, redBrick, pinkBrick, orangeBrick, yellowBrick; // textures
+    public Rectangle rect; // rects for bricks
+    public boolean gone = false; // gone is a boolean that determines if the specific brick is removed or not
 
-    private int hitx, hity;
-    Random rand = new Random();
-    int score = 0;
-    int n = rand.nextInt(10) + 1;
-    int r = rand.nextInt(5) + 1;
-
-    public static boolean powergone = false;
-
-    private boolean isdone = false;
-
-
-
+    //brick method takes in the type of brick and its x and y location
     public Bricks(String type, int x, int y){
         //loading all textures to the object array list
         blueBrick = new Texture("Bricks/bluebrick.png");
@@ -42,8 +31,7 @@ public class Bricks{
         orangeBrick = new Texture("Bricks/orangebrick.png");
         yellowBrick = new Texture("Bricks/yellowbrick.png");
 
-
-
+        //checks which type of brick is passed through and makes the corrisponding sprite
         if(type.equals("blue")){
             brick = new Sprite(blueBrick);
         }
@@ -65,16 +53,14 @@ public class Bricks{
         else if (type.equals("yellow")){
             brick = new Sprite(yellowBrick);
         }
-
+        // sets the sprite bricks x and y
         brick.setPosition((40 + x * 42)  , 705 - y * 20);
+        // creates a rect used for collision etc.
         rect = new Rectangle((int) brick.getX(), (int) brick.getY(), (int) brick.getWidth(), (int) brick.getHeight());
-
-
-
     }
 
 
-    // renders the sprties
+    // renders the bricks
     private void render(SpriteBatch batch){
         rect = new Rectangle((int) brick.getX(), (int) brick.getY(), (int) brick.getWidth(), (int) brick.getHeight());
         brick.draw(batch);
@@ -82,34 +68,33 @@ public class Bricks{
 
     // updates the sprites to make the multiple bricks
     public void update(SpriteBatch batch){
-
-
+        // if the specific brick is gone
         if(this.getGone()){
-            brick.setAlpha(0);
+            brick.setAlpha(0); // make it invisible
 
         }
-        this.render(batch);
+        this.render(batch); // update
     }
 
+    //used for getting the rectanlge
     public Rectangle getRect(){
         return rect;
     }
-
+    // returns boolean upon checking for collision with the ball
     public boolean collide (Ball ball){
         return Ball.ball.getBoundingRectangle().overlaps(brick.getBoundingRectangle()) && !this.getGone();
 
     }
-
-
+    // returns boolean upon checking for collision with the bullet
     public boolean bulletcollide(Bullets bullet){
         return bullet.getRect().intersects(this.getRect()) && !this.getGone();
 
     }
-
+    // get method for the gone boolean
     public boolean getGone(){
         return gone;
     }
-
+    // set method for the gone boolean (used in the main file)
     public void setGone(boolean gone){
         this.gone = gone;
 
